@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+<robot name="washing_tool1">
+
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0 0 0.8 1"/>
+  </material>
+
+  <link name="root">
+  <inertial>
+      <mass value="0.1"/>
+      <origin rpy="0 0 0" xyz="0 0 0.03"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="washing_tool1.obj" scale="0.25 0.25 0.25"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="washing_tool1_vhacd.obj" scale="0.25 0.25 0.25"/>
+      </geometry>
+    </collision>
+  </link>
+
+
+  <link name="electrode1">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="0.5 0.5 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode1" type="fixed">
+    <parent link="root"/>
+     <child link="electrode1"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="0.5 0.5 0"/>
+  </joint>
+
+  <link name="electrode2">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="1.7 0.5 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode2" type="fixed">
+    <parent link="root"/>
+     <child link="electrode2"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="1.7 0.5 0"/>
+  </joint>
+
+  <link name="electrode3">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="3 0.5 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode3" type="fixed">
+    <parent link="root"/>
+     <child link="electrode3"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="3 0.5 0"/>
+  </joint>
+
+  <link name="electrode4">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="0.5 2 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode4" type="fixed">
+    <parent link="root"/>
+     <child link="electrode4"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="0.5 2 0"/>
+  </joint>
+
+  <link name="electrode5">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="1.7 2 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode5" type="fixed">
+    <parent link="root"/>
+     <child link="electrode5"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="1.7 2 0"/>
+  </joint>
+
+  <link name="electrode6">
+    <visual>
+      <geometry>
+          <sphere radius="0.1 0.1 0.1"/>
+      </geometry>
+      <!-- <origin rpy="0 0 0" xyz="3 2 0"/> -->
+      <material name="blue"/>
+    </visual> 
+  </link>
+
+  <joint name="root_to_electrode6" type="fixed">
+    <parent link="root"/>
+     <child link="electrode6"/>
+     <!-- <origin xyz="0 -0.22 0.25"/> -->
+     <origin rpy="0 0 0" xyz="3 2 0"/>
+  </joint>
+
+</robot>
