@@ -70,6 +70,7 @@ class HumanMesh(Agent):
         # SMPL only joints (not SMPL-X)
         # self.j_left_fingers_x, self.j_left_fingers_y, self.j_left_fingers_z = 63, 64, 65
         # self.j_right_fingers_x, self.j_right_fingers_y, self.j_right_fingers_z = 66, 67, 68
+        # self.j_right_arm_center_x, 
 
         self.num_body_shape = 10
         self.vertex_positions = None
@@ -77,6 +78,7 @@ class HumanMesh(Agent):
         self.joint_positions = None
         self.right_arm_vertex_indices = None
         self.bottom_index = 5574
+        self.right_arm_center = 7310 #7454 7310 7683
 
     def create_smplx_body(self, directory, id, np_random, gender='female', height=None, body_shape=None, joint_angles=[], position=[0, 0, 0], orientation=[0, 0, 0], body_pose=None):
         # Choose gender

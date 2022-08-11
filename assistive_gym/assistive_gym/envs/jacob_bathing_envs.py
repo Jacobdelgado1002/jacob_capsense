@@ -87,6 +87,7 @@ class ChestCleaningJacoMeshEnv(ChestCleaningMeshEnv):
 class ChestCleaningStretchMeshEnv(ChestCleaningMeshEnv):
     def __init__(self):
         super(ChestCleaningStretchMeshEnv, self).__init__(robot=Stretch('wheel_'+robot_arm), human=HumanMesh())
+        # super(ChestCleaningStretchMeshEnv, self).__init__(robot=Stretch(robot_arm), human=HumanMesh())
 
 class ChestCleaningPandaMeshEnv(ChestCleaningMeshEnv):
     def __init__(self):

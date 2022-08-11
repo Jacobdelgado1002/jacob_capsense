@@ -184,6 +184,10 @@ class AssistiveEnv(gym.Env):
             self.last_sim_time = time.time()
         self.iteration += 1
         self.forces = []
+        # print("actions is: ", actions)
+        # print("actions.shape is: ", actions.shape)
+        # print("a_min is: ", self.action_space.low)
+        # print("a_max is: ", self.action_space.high)
         actions = np.clip(actions, a_min=self.action_space.low, a_max=self.action_space.high)
         actions *= action_multiplier
         action_index = 0
@@ -200,6 +204,8 @@ class AssistiveEnv(gym.Env):
                     exit()
             # Append the new action to the current measured joint angles
             agent_joint_angles = agent.get_joint_angles(agent.controllable_joint_indices)
+            # print("agent.controllable indices are: ", agent.controllable_joint_indices)
+            # exit()
             # Update the target robot/human joint angles based on the proposed action and joint limits
             for _ in range(self.frame_skip):
                 if needs_action:

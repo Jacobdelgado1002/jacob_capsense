@@ -3,7 +3,14 @@ import pybullet as p
 from .agent import Agent
 
 class Robot(Agent):
-    def __init__(self, controllable_joints, right_arm_joint_indices, left_arm_joint_indices, wheel_joint_indices, right_end_effector, left_end_effector, right_gripper_indices, left_gripper_indices, gripper_pos, right_tool_joint, left_tool_joint, tool_pos_offset, tool_orient_offset, right_gripper_collision_indices, left_gripper_collision_indices, toc_base_pos_offset, toc_ee_orient_rpy, wheelchair_mounted, half_range=False, controllable_joint_indices=None, action_duplication=None, action_multiplier=1, flags=None):
+    def __init__(self, controllable_joints, 
+        right_arm_joint_indices, left_arm_joint_indices, 
+            wheel_joint_indices, right_end_effector, left_end_effector, 
+            right_gripper_indices, left_gripper_indices, gripper_pos, right_tool_joint, 
+            left_tool_joint, tool_pos_offset, tool_orient_offset, right_gripper_collision_indices, 
+            left_gripper_collision_indices, toc_base_pos_offset, toc_ee_orient_rpy, wheelchair_mounted, 
+            half_range=False, controllable_joint_indices=None, action_duplication=None, action_multiplier=1, 
+            flags=None):
         self.controllable_joints = controllable_joints if controllable_joint_indices is None else ''
         self.right_arm_joint_indices = right_arm_joint_indices # Controllable arm joints
         self.left_arm_joint_indices = left_arm_joint_indices # Controllable arm joints
@@ -14,6 +21,12 @@ class Robot(Agent):
         else:
             self.controllable_joint_indices = self.wheel_joint_indices if self.mobile else []
             self.controllable_joint_indices = self.controllable_joint_indices + (self.right_arm_joint_indices if 'right' in controllable_joints else self.left_arm_joint_indices if 'left' in controllable_joints else self.right_arm_joint_indices + self.left_arm_joint_indices)
+
+            
+        # print("controllable indices are: ", self.controllable_joint_indices)
+        # exit()    
+        
+            
         self.right_end_effector = right_end_effector # Used to get the pose of the end effector
         self.left_end_effector = left_end_effector # Used to get the pose of the end effector
         self.right_gripper_indices = right_gripper_indices # Gripper actuated joints

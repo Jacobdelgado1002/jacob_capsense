@@ -22,7 +22,6 @@ import cape
 import pybullet as p
 import meshio
 
-
 # arm_filename = 'arm_touchread_sensitive_ikea_6sensorsnewimproved_pi8_15cm_iteration_%d_movement_%s.pkl'
 # leg_filename = 'leg_touchread_sensitive_ikea_6sensorsnewimproved_pi8_15cm_iteration_%d_movement_%s.pkl'
 # directory = 'trainingdata'
@@ -86,7 +85,7 @@ roi_nodes = list(range(0,1928))
 
 electrode_nodes = []
 for sublist in(nodes):
-    if(sublist[2] == 0.25):
+    if(sublist[2] == 0.10):
         electrode_nodes.append(sublist)
 
 # print(electrode_nodes)

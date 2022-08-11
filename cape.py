@@ -16,6 +16,9 @@ import numpy as np
 import scipy.sparse as sp
 import scipy.sparse.linalg as splinalg
 import time
+from matplotlib import pyplot as plt
+from mpl_toolkits import mplot3d
+
 
 
 class CAPE:
@@ -60,9 +63,11 @@ class CAPE:
     # mesh input data
     ###########################################################
     def assembleSystem(self):
-        scaler = 1e-3  # scale to meters
+        scaler = 1e-2 # scale to meters
         self.nodes = self.nodes.T
 
+        fig = plt.figure()
+        ax = plt.axes(projection='3d')
         for k in range(self.nr_elements - 1):
             y1 = self.nodes[1, self.inzid[k, 0]] * scaler
             y2 = self.nodes[1, self.inzid[k, 1]] * scaler
@@ -101,7 +106,46 @@ class CAPE:
 
             volume = (1 / 6) * abs(np.linalg.det(A))
 
-            self.K_local[:, :, k] = (1 / (36 * volume)) * (np.outer(b, b) + np.outer(c, c) + np.outer(d, d))
+            # using this for debugging. if it encounters an element with a volume of 0 then it plots it and skips it
+            if volume < 1e-20:
+                # ax.axes(projection='3d')
+                ax.scatter([x1], [y1], [z1], label='1st', c = 'r')
+                ax.scatter([x2], [y2], [z2], label='2nd', c = 'r')
+                ax.scatter([x3], [y3], [z3], label='3rd', c = 'r')
+                ax.scatter([x4], [y4], [z4], label='4th', c = 'r')
+
+                ax.plot([x1, x2], [y1, y2], [z1, z2], c = 'r')
+                ax.plot([x1, x3], [y1, y3], [z1, z3], c = 'r')
+                ax.plot([x1, x4], [y1, y4], [z1, z4], c = 'r')
+
+
+
+                print("volume zero!")
+                continue
+            # else:
+            #     ax.scatter([x1], [y1], [z1], label='1st', c = 'b')
+            #     ax.scatter([x2], [y2], [z2], label='2nd', c = 'b')
+            #     ax.scatter([x3], [y3], [z3], label='3rd', c = 'b')
+            #     ax.scatter([x4], [y4], [z4], label='4th', c = 'b')
+
+            #     ax.plot([x1, x2], [y1, y2], [z1, z2], c = 'b')
+            #     ax.plot([x1, x3], [y1, y3], [z1, z3], c = 'b')
+            #     ax.plot([x1, x4], [y1, y4], [z1, z4], c = 'b')
+            #     continue
+            # print(b)
+            # print(c)
+            # print(d)
+            # exit()
+
+            try:
+                self.K_local[:, :, k] = (1 / (36 * volume)) * (np.outer(b, b) + np.outer(c, c) + np.outer(d, d))
+            except RuntimeWarning:
+                print("deterministic of matrix A: ", np.linalg.det(A))
+                # print(k)
+                print("volume of the tethehedra: ", volume)
+                exit()
+        # plt.legend()
+        plt.show()
 
         for k in range(self.nr_elements - 1):
             self.K_init[np.ix_(self.inzid[k, :], self.inzid[k, :])] = self.K_init[np.ix_(self.inzid[k, :], self.inzid[k, :])] + self.matval[:, k] * self.K_local[:, :, k]

@@ -20,7 +20,7 @@ class Tool(Agent):
         elif task == 'bed_bathing' or task == 'feeding':
             tool = p.loadURDF(os.path.join(directory, 'bed_bathing', 'wiper.urdf'), basePosition=transform_pos, baseOrientation=transform_orient, physicsClientId=id)
         elif task == 'chest_cleaning':
-            tool = p.loadURDF(os.path.join(directory, 'jacob_washing_tool1', 'washing_tool1.urdf'), basePosition=transform_pos, baseOrientation=transform_orient, physicsClientId=id, globalScaling = 0.001)
+            tool = p.loadURDF(os.path.join(directory, 'jacob_washing_tool1', 'washing_tool1.urdf'), basePosition=transform_pos, baseOrientation=transform_orient, physicsClientId=id, globalScaling = 0.04) #0.001
             self.controllable_joint_indices = [0, 1, 2, 3, 4, 5]
             # self.controllable_joint_indices = [6]  
         elif task in ['drinking', 'feeding', 'arm_manipulation']:

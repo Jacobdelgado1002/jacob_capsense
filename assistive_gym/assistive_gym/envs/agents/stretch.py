@@ -6,7 +6,9 @@ from .robot import Robot
 class Stretch(Robot):
     def __init__(self, controllable_joints='right'):
         # right_arm_joint_indices = [0, 1, 3, 5, 6, 7, 8, 9] # Controllable arm joints
+        # right_arm_joint_indices = [3, 5, 9] # Controllable arm joints
         right_arm_joint_indices = [3, 5, 9] # Controllable arm joints
+        # right_arm_joint_indices = [33, 34, 35] # Controllable arm joints
         left_arm_joint_indices = right_arm_joint_indices # Controllable arm joints
         wheel_joint_indices = [0, 1] # Controllable wheel joints
         right_end_effector = 15 # Used to get the pose of the end effector
@@ -59,7 +61,14 @@ class Stretch(Robot):
         self.action_multiplier = [3, 3, 2, 1, 2] # Adjust the speed of each motor by a multiplier of the default speed
         self.all_controllable_joints = [0, 1, 3, 5, 6, 7, 8, 9] if 'wheel' in controllable_joints else [3, 5, 6, 7, 8, 9]
 
-        super(Stretch, self).__init__(controllable_joints, right_arm_joint_indices, left_arm_joint_indices, wheel_joint_indices, right_end_effector, left_end_effector, right_gripper_indices, left_gripper_indices, gripper_pos, right_tool_joint, left_tool_joint, tool_pos_offset, tool_orient_offset, right_gripper_collision_indices, left_gripper_collision_indices, toc_base_pos_offset, toc_ee_orient_rpy, wheelchair_mounted, half_range=False, action_duplication=self.action_duplication, action_multiplier=self.action_multiplier, flags='stretch')
+        super(Stretch, self).__init__(controllable_joints, right_arm_joint_indices, left_arm_joint_indices, wheel_joint_indices, 
+        right_end_effector, left_end_effector, right_gripper_indices, 
+        left_gripper_indices, gripper_pos, right_tool_joint, left_tool_joint, 
+        tool_pos_offset, tool_orient_offset, right_gripper_collision_indices, 
+        left_gripper_collision_indices, toc_base_pos_offset, toc_ee_orient_rpy, 
+        wheelchair_mounted, 
+        half_range=False, action_duplication=self.action_duplication, 
+        action_multiplier=self.action_multiplier, flags='stretch')
 
     def randomize_init_joint_angles(self, task, offset=0):
         if task in ['bed_bathing', 'dressing']:
@@ -71,8 +80,8 @@ class Stretch(Robot):
         # TODO: Inertia from urdf file is not correct.
         # It does not adhere to the property: ixx <= iyy+izz and iyy <= ixx+izz and izz <= ixx+iyy
         # self.body = p.loadURDF(os.path.join(directory, 'stretch', 'stretch_uncalibrated.urdf'), useFixedBase=False, basePosition=[-2, -2, 0.975], flags=p.URDF_USE_INERTIA_FROM_FILE, physicsClientId=id)
-        self.body = p.loadURDF(os.path.join(directory, 'stretch', 'stretch.urdf'), useFixedBase=False, basePosition=[-1, 0, 0.09], physicsClientId=id)
-        super(Stretch, self).init(self.body, id, np_random)
+        self.body = p.loadURDF(os.path.join(directory, 'stretch', 'stretch_uncalibrated.urdf'), useFixedBase=False, basePosition=[-1, -0.015, 0.09], baseOrientation = [0, 0, 90, 90], physicsClientId=id)
+        super(Stretch, self).init(self.body, id, np_random)                                                         # basePosition=[-1, -0.5, 0.09]
 
         # Fix mass
         # print(p.getDynamicsInfo(self.body, 0, physicsClientId=id))

@@ -12,7 +12,7 @@
   <link name="root">
   <inertial>
       <mass value="0.1"/>
-      <origin rpy="0 0 0" xyz="0 0 0.03"/>
+      <origin rpy="0 0 0" xyz="0 -0.875 -1.25"/>
       <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
     </inertial>
     <visual>

@@ -5,6 +5,7 @@ Created on Mon Jun 14 11:01:10 2021
 @author: Simulation
 """
 
+from filecmp import clear_cache
 import os, gym
 import numpy as np
 import assistive_gym
@@ -54,6 +55,23 @@ max_distance = 50
 max_length = 50
 nr_pixels = 64
 
+# print(nr_elements)
+
+# print(nr_nodes)
+
+# print(inzid)
+
+# print(nodes)
+
+# print(roi_nodes)
+
+print(type(electrode_nodes))
+print(len(electrode_nodes))
+print(electrode_nodes[0])
+print(electrode_nodes)
+
+# print(centroids)
+# exit()
 # initialize capacitive simulation
 cap = cape.CAPE(nr_electrodes, electrode_nodes, nr_elements, nr_nodes,
                 roi_nodes, max_distance, max_length,
@@ -102,6 +120,7 @@ plt.ion()
 done = 0
 counter = 0
 loop_counter=0
+capacitance_list = []
 while counter < nr_points:
     print("Go to next position\n")
     done = 0
@@ -115,6 +134,7 @@ while counter < nr_points:
 
     target_joint_angles = env.robot.ik(env.robot.right_end_effector, target_pos, target_orient,
                                        env.robot.right_arm_ik_indices, max_iterations=1000, use_current_as_rest=True)
+    # print("target joint anlges shape: ", target_joint_angles.shape)
 
     while done == 0:
         loop_counter = loop_counter + 1
@@ -138,8 +158,10 @@ while counter < nr_points:
         cap.meshMasking()
         cap.solveSystem(K1, B1)
         print("Capacitance: ", cap.cap_vector[counter])
+        capacitance_list.append(cap.cap_vector[counter])
 
         action = (target_joint_angles - current_joint_angles)*2
+        # print("current joint angle shape: ", current_joint_angles.shape)
         observation, reward, done, info = env.step(action)
 
         if np.linalg.norm(action) < 0.1:

@@ -18,38 +18,59 @@ class ChestCleaningEnv(AssistiveEnv):
         if self.human.controllable:
             action = np.concatenate([action['robot'], action['human']])
         # Execute the action. Step the simulator forward
+        # actions = {self.robot.left_end_effector = np.array[0,0,0]}
+        # curretn_pos = self.robot.left_end_effector.get_base_pos_orient()
+        # print(curretn_pos)
+        # exit()
+        # self.robot.left_end_effector
+        elbow_pos, elbow_orient = self.human.get_pos_orient(self.human.right_elbow)
+        wrist_pos, wrist_orient = self.human.get_pos_orient(self.human.right_wrist)
+        target_pos, _ = np.divide(elbow_pos + wrist_pos, 2), np.divide(elbow_orient + wrist_orient, 2)
+        self.target_cur_pos = target_pos + np.array([0, 0, 0.08])
         print("before take_step")
         self.take_step(action)
 
         obs = self._get_obs()
 
-        # Get human preferences
-        end_effector_velocity = np.linalg.norm(self.robot.get_velocity(self.robot.left_end_effector))
-        preferences_score = self.human_preferences(end_effector_velocity=end_effector_velocity)
-
-        # Define our reward function
-        reward_distance = -min(self.tool.get_closest_points(self.human, distance=5.0)[-1])
-        reward_action = -np.linalg.norm(action) # Penalize actions
-        # reward_new_contact_points = self.new_contact_points # Reward new contact points on a person
-
-        reward = self.config('distance_weight')*reward_distance + self.config('action_weight')*reward_action + preferences_score
-
-        # if self.gui and self.tool_force_on_human > 0:
-        #     print('Task success:', self.task_success, 'Force at tool on human:', self.tool_force_on_human, reward_new_contact_points)
-
-        # info = {'task_success': int(self.task_success >= (self.total_target_count*self.config('task_success_threshold'))), 'action_robot_len': self.action_robot_len, 'action_human_len': self.action_human_len, 'obs_robot_len': self.obs_robot_len, 'obs_human_len': self.obs_human_len}
-        info = {'task_success': int(self.task_success >= (self.config('task_success_threshold'))), 'action_robot_len': self.action_robot_len, 'action_human_len': self.action_human_len, 'obs_robot_len': self.obs_robot_len, 'obs_human_len': self.obs_human_len}
-
-        
-
         done = self.iteration >= 200
+        reward = 1
+        #done = 0
+        info = 0
 
-        print("taking step is done")
         if not self.human.controllable:
             return obs, reward, done, info
         else:
             # Co-optimization with both human and robot controllable
-            return obs, {'robot': reward, 'human': reward}, {'robot': done, 'human': done, '__all__': done}, {'robot': info, 'human': info}
+            return obs, {'robot': reward, 'human': reward}, {'robot': done, 'human': done, '__all__': done}, {
+                'robot': info, 'human': info}
+
+        # # Get human preferences
+        # end_effector_velocity = np.linalg.norm(self.robot.get_velocity(self.robot.left_end_effector))
+        # preferences_score = self.human_preferences(end_effector_velocity=end_effector_velocity)
+
+        # # Define our reward function
+        # reward_distance = -min(self.tool.get_closest_points(self.human, distance=5.0)[-1])
+        # reward_action = -np.linalg.norm(action) # Penalize actions
+        # # reward_new_contact_points = self.new_contact_points # Reward new contact points on a person
+
+        # reward = self.config('distance_weight')*reward_distance + self.config('action_weight')*reward_action + preferences_score
+
+        # # if self.gui and self.tool_force_on_human > 0:
+        # #     print('Task success:', self.task_success, 'Force at tool on human:', self.tool_force_on_human, reward_new_contact_points)
+
+        # # info = {'task_success': int(self.task_success >= (self.total_target_count*self.config('task_success_threshold'))), 'action_robot_len': self.action_robot_len, 'action_human_len': self.action_human_len, 'obs_robot_len': self.obs_robot_len, 'obs_human_len': self.obs_human_len}
+        # info = {'task_success': int(self.task_success >= (self.config('task_success_threshold'))), 'action_robot_len': self.action_robot_len, 'action_human_len': self.action_human_len, 'obs_robot_len': self.obs_robot_len, 'obs_human_len': self.obs_human_len}
+
+        
+
+        # done = self.iteration >= 200
+
+        # print("taking step is done")
+        # if not self.human.controllable:
+        #     return obs, reward, done, info
+        # else:
+        #     # Co-optimization with both human and robot controllable
+        #     return obs, {'robot': reward, 'human': reward}, {'robot': done, 'human': done, '__all__': done}, {'robot': info, 'human': info}
     
     # def get_total_force(self):
     #     total_force_on_human = np.sum(self.robot.get_contact_points(self.human)[-1])
@@ -166,12 +187,13 @@ class ChestCleaningEnv(AssistiveEnv):
         # self.human.set_whole_body_frictions(spinning_friction=2)
         
 
-        shoulder_pos = self.human.get_pos_orient(self.human.right_shoulder)[0]
-        elbow_pos = self.human.get_pos_orient(self.human.right_elbow)[0]
-        wrist_pos = self.human.get_pos_orient(self.human.right_wrist)[0]
+        elbow_pos, elbow_orient = self.human.get_pos_orient(self.human.right_elbow)
+        wrist_pos, wrist_orient = self.human.get_pos_orient(self.human.right_wrist)
+        target_pos, _ = np.divide(elbow_pos + wrist_pos, 2), np.divide(elbow_orient + wrist_orient, 2)
+        self.target_cur_pos = target_pos + np.array([0, 0, 0.08])
 
         # Initialize the tool in the robot's gripper
-        # self.tool.init(self.robot, self.task, self.directory, self.id, self.np_random, right=False, mesh_scale=[1]*3)
+        self.tool.init(self.robot, self.task, self.directory, self.id, self.np_random, right=False, mesh_scale=[0.08]*3)
 
         target_ee_pos = np.array([-0.6, 0.2, 1]) + self.np_random.uniform(-0.05, 0.05, size=3)
         target_ee_orient = self.get_quaternion(self.robot.toc_ee_orient_rpy[self.task])
@@ -191,7 +213,7 @@ class ChestCleaningEnv(AssistiveEnv):
         self.generate_targets()
 
         if not self.robot.mobile:
-            self.robot.set_gravity(0, 0, 0)
+            self.robot.set_gravity(0, 0, 0) 
         self.human.set_gravity(0, 0, 0)
         self.tool.set_gravity(0, 0, 0)
         
